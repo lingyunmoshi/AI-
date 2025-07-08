@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据库数据展示</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      background-image: url('img/accountbackground.jpeg'); /* 添加背景图片 */
+      background-size: cover; /* 背景图片覆盖整个页面 */
+      background-position: center; /* 背景图片居中 */
+      background-repeat: no-repeat; /* 背景图片不重复 */
+    }
+    h1 {
+      font-size: 2rem;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 80%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #cc4040;
+      padding: 8px;
+      background-color: #f0f0f0;
+      color: #1f1f2d;
+      text-align: center;
+    }
+    th {
+      background-color: #50268f;
+    }
+  </style>
+</head>
+<body>
+<h1>AI智能购票系统 - 展会表</h1>
+<table id="data-table">
+  <thead>
+  <tr>
+    <th>展会名</th>
+    <th>价格</th>
+    <th>开始时间</th>
+    <th>结束时间</th>
+    <th>描述</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- 数据将在这里动态插入 -->
+  </tbody>
+</table>
+<script>
+
+  // 获取数据并填充表格
+  async function fetchData() {
+
+
+    try {
+      const response = await fetch('http://127.0.0.1:8081/getExhibitionMsg');
+      {
+        mode: 'no-cors' // 设置请求模式为 no-cors
+      }
+      if (!response.ok) {
+        throw new Error('网络请求失败');
+      }
+      const data = await response.json();
+      populateTable(data);
+      loading.textContent = '';
+    } catch (error) {
+      console.error('获取数据时出错:', error);
+      loading.textContent = '无法加载数据，请检查网络或服务器';
+    }
+  }
+
+  // 将数据填充到表格中
+  function populateTable(data) {
+    const tableBody = document.querySelector('#data-table tbody');
+    tableBody.innerHTML = ''; // 清空表格内容
+    data.forEach(item => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+                <td>${item.exhibition}</td>
+                <td>${item.price}</td>
+                <td>${item.startdate}</td>
+                <td>${item.enddate}</td>
+                <td>${item.description}</td>
+            `;
+      tableBody.appendChild(row);
+    });
+  }
+
+  // 页面加载完成后获取数据
+  document.addEventListener('DOMContentLoaded', fetchData);
+</script>
+</body>
+</html>

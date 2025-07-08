@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            background-image: url('img/citybackground.jpg'); /* 添加背景图片 */
+            background-size: cover; /* 背景图片覆盖整个页面 */
+            background-position: center; /* 背景图片居中 */
+            background-repeat: no-repeat; /* 背景图片不重复 */
+        }
+        h1 {
+            font-size: 3rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* 添加图片样式 */
+        .bottom-image {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            bottom: 20px; /* 距离底部20px */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>AI智能购票系统</h1>
+<div class="button-container">
+    <button id="button1">查询账号表</button>
+    <button id="button2">查询展会表</button>
+    <button id="button3">查询订单表</button>
+    <button id="button4">增加展会表</button>
+
+</div>
+<img src="img/deepseek.jpg" alt="点击进入AI页面" class="bottom-image" id="bottomImage">
+<script>
+
+    document.getElementById('button1').addEventListener('click', function() {
+        window.location.href = 'account.html';
+    });
+    document.getElementById('button2').addEventListener('click', function() {
+        window.location.href = 'exhibitionmsg.html';
+    });
+    document.getElementById('button3').addEventListener('click', function() {
+        window.location.href = 'orders.html';
+    });
+    document.getElementById('button4').addEventListener('click', function() {
+        window.location.href = 'addExhibition.html';
+    });
+
+    document.getElementById('bottomImage').addEventListener('click', function() {
+        window.location.href = 'ai.html';
+    });
+</script>
+</body>
+</html>

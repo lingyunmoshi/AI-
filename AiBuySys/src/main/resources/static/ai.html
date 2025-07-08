@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天界面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 8px;
+            margin: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 60%;
+        }
+
+        .message.user {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background-color: #f0f0f0;
+            color: black;
+            margin-right: auto;
+        }
+
+        .input-container {
+            padding: 20px;
+            background: #f4f4f4;
+            border-top: 1px solid #ddd;
+        }
+
+        .input-container input {
+            width: calc(100% - 50px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .input-container button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="chatContainer">
+    <!-- 聊天内容会动态插入到这里 -->
+</div>
+<div class="input-container">
+    <input type="text" id="messageInput" placeholder="输入消息..." required>
+    <button onclick="sendMessage()">发送</button>
+</div>
+
+<script>
+    const chatContainer = document.getElementById('chatContainer');
+    const messageInput = document.getElementById('messageInput');
+
+    function sendMessage() {
+        const userMessage = messageInput.value.trim();
+        if (userMessage === '') {
+            alert('请输入消息！');
+            return;
+        }
+
+        // 显示用户的消息
+        const userMessageElement = document.createElement('div');
+        userMessageElement.classList.add('message', 'user');
+        userMessageElement.textContent = userMessage;
+        chatContainer.appendChild(userMessageElement);
+
+        // 清空输入框
+        messageInput.value = '';
+
+        // 滚动到最底部
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // 发送到后端并获取 AI 回复
+        fetch('http://localhost:8081/chat', { // 替换为你的后端接口地址
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: userMessage }),
+        })
+            .then(response => response.text())
+            .then(data => {
+                const botMessageElement = document.createElement('div');
+                botMessageElement.classList.add('message', 'bot');
+                const formattedData=data.replace(/\n/g, '<br>');
+                botMessageElement.innerHTML=formattedData;
+                //botMessageElement.textContent = data;
+                chatContainer.appendChild(botMessageElement);
+
+                // 滚动到最底部
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const botMessageElement = document.createElement('div');
+                botMessageElement.classList.add('message', 'bot');
+                botMessageElement.textContent = 'AI 服务暂不可用，请稍后再试';
+                chatContainer.appendChild(botMessageElement);
+
+                // 滚动到最底部
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
+    }
+
+    // 按下回车键发送消息
+    messageInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+</script>
+</body>
+</html>
